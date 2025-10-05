@@ -13,3 +13,12 @@ require("assets/codebase/core/hud")
 require("assets/codebase/core/player")
 require("assets/codebase/core/dealer")
 require("assets/codebase/core/hand")
+require("assets/codebase/core/floatingText")
+require("assets/codebase/core/deckViewer")
+require("assets/codebase/core/shop")
+require("assets/codebase/core/enchantment")
+
+
+--Helper
+require("assets/codebase/helpers/betAdjuster")
+require("assets/codebase/helpers/cardPattern")

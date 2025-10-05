@@ -1,5 +1,10 @@
 Card = class("Card")
 
+
+local backside = love.graphics.newImage("assets/gfx/cards/backside.png")
+
+local enchantmentShader = love.graphics.newShader("assets/codebase/shader/enchantedGlow.glsl")
+
 function Card:initialize(rank, suit)
     self.x = 0
     self.y = 0
@@ -8,29 +13,49 @@ function Card:initialize(rank, suit)
     self.targetY = 0
     self.lerpSpeed = 16
 
-    self.width = 2.5  * 30
-    self.height = 3.5 * 30
+    self.width = 113
+    self.height = 158
 
     self.rank = rank or 1
     self.suit = suit or 1
+
+    self.flipped = false
+
+    self.enchantments = {}
 
 end
 
 function Card:update(dt)
     self:drag(dt)
-
-
 end
 
 function Card:draw()
-    game:setFont(20)
     love.graphics.setColor(1,1,1)
 
-    love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
+    if self.flipped then 
+        love.graphics.draw(backside, self.x, self.y, 0, 1.5, 1.5)
+    else
+        love.graphics.push()
+            love.graphics.translate(self.x, self.y)
+            self:render()
+        love.graphics.pop()
+    end
+end
+
+function Card:render()
     
-    
-    love.graphics.setColor(0,0,0)
-    love.graphics.print(self.rank, self.x + 1, self.y + 1)
+    love.graphics.setColor(1,1,1,1)
+    if #self.enchantments > 0 and not self.flipped then 
+        enchantmentShader:send("time", love.timer.getTime())
+        enchantmentShader:send("tint_color", self.enchantments[1].color)
+        enchantmentShader:send("base_strength", 0.7)           -- minimum tint strength
+        enchantmentShader:send("pulse_amplitude", 0.5)         -- how much it pulses
+        love.graphics.setShader(enchantmentShader)
+    end
+
+    drawCardPattern(self.rank, self.suit)
+
+    love.graphics.setShader()
 end
 
 
@@ -83,3 +108,16 @@ function Card:getValue()
     end
     return self.rank
 end 
+
+function Card:addEnchantment(enchantment)
+    table.insert(self.enchantments, enchantment)
+end
+
+function Card:hasEnchantment(enchantmentClass)
+    for i,v in pairs(self.enchantments) do
+        if enchantmentClass == v.class then 
+            return true 
+        end
+    end
+    return false
+end

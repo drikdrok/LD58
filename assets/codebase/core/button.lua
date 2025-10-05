@@ -12,9 +12,11 @@ function Button:initialize(x, y, width, height, text, onClick)
 
     self.textSize = 24
 
-    self.color = {0.5, 0.5, 0.5, 0.7}
+    self.color = {0.5, 0.5, 0.5}
 
-    self.enabled = true
+    self.enabled = false
+
+    self.isDown = false
 end
 
 
@@ -26,7 +28,12 @@ end
 function Button:draw()
     if not self.enabled then return end
 
-    love.graphics.setColor(self.color)
+    local alpha = 0.7
+    if self.isDown then 
+        alpha = 0.5
+    end
+
+    love.graphics.setColor(self.color[1], self.color[2], self.color[3], alpha)
     love.graphics.rectangle("fill", self.x, self.y, self.width, self.height)
 
     love.graphics.setColor(1,1,1,1)
@@ -37,8 +44,8 @@ end
 function Button:mousepressed(x, y, button)
     if not self.enabled then return end
     if pointInRect({x,y}, {self.x, self.y, self.width, self.height}) then
-        self.color = {self.color[1] - 0.2, self.color[2] - 0.2, self.color[3] - 0.2, self.color[4]}
-
+        self.isDown = true
+        game.hasClicked = true
         self.onClick()
     end
 end
@@ -46,15 +53,21 @@ end
 function Button:mousereleased(x, y, button)
      if not self.enabled then return end
     if pointInRect({x,y}, {self.x, self.y, self.width, self.height}) then
-        self.color = {self.color[1] + 0.2, self.color[2] + 0.2, self.color[3] + 0.2, self.color[4]}
     end
+
+    self.isDown = false
 end
 
 -- Set anchor relative to screen width, height
 function Button:setAnchor(x, y)
     local width, height = love.graphics.getDimensions()
-    self.x = self.x + width    * x
-    self.y = self.y + height   * y
+    self.x = self.x + width    * x - self.width / 2
+    self.y = self.y + height   * y - self.height / 2
 
+    return self
+end
+
+function Button:setTextSize(size)
+    self.textSize = size
     return self
 end

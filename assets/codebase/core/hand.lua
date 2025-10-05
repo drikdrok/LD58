@@ -56,6 +56,7 @@ end
 
 function Hand:addCard(card)
     card:setTarget(self.x, self.y - #self.cards * 160)
+    card:onDraw()
     table.insert(self.cards, card)
 end
 
@@ -67,7 +68,7 @@ end
 function Hand:getSum()
     local sum = 0
     table.sort(self.cards, function (a,b) 
-        return a.rank < b.rank
+        return a.rank > b.rank
     end)
     for i,card in pairs(self.cards) do 
         local value = card:getValue()

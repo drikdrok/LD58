@@ -31,13 +31,18 @@ end
 
 
 function Player:drawCard(flipped)
-    if #self.deck == 0 then 
-        error("Deck is empty!")
-    end
+    
+    local card
 
-    local index = love.math.random(1, #self.deck)
-    local card = self.deck[index]
-    table.remove(self.deck, index)
+    if #self.deck > 0 then 
+        local index = love.math.random(1, #self.deck)
+        card = self.deck[index]
+        table.remove(self.deck, index)
+    else
+        card = defaultDeck()[math.random(1, 52)]
+        card:addEnchantment(EphemeralEnchantment:new())
+    end
+    
     table.insert(self.usedDeck, card)
 
     card:setPosition(dealer.drawDeckX, dealer.drawDeckY)
@@ -53,8 +58,10 @@ end
 
 function Player:reshuffle()
     for i,v in pairs(self.usedDeck) do
-        table.insert(self.deck, v)   
-        v.flipped = false -- IDK
+        if not v:hasEnchantment(EphemeralEnchantment) then
+            table.insert(self.deck, v)   
+            v.flipped = false -- IDK
+        end
     end
     self.usedDeck = {}
 end

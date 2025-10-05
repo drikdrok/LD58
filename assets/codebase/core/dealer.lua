@@ -39,6 +39,7 @@ function Dealer:update(dt)
     end
 end
 
+local arrowSprite = love.graphics.newImage("assets/gfx/sprites/arrow.png")
 function Dealer:draw()
     love.graphics.setColor(1,1,1)
     love.graphics.draw(backside, self.drawDeckX - cardWidth / 2, self.drawDeckY - cardHeight / 2, 0, 1.5, 1.5)
@@ -47,6 +48,14 @@ function Dealer:draw()
     for i,v in pairs(self.hands) do
         v:draw()
     end
+
+    if self.state == "player" then 
+        local currentHand = self.hands[self.currentHand]
+        if not currentHand then return end
+        love.graphics.draw(arrowSprite, currentHand.x - 16 * 3 / 2, currentHand.y - #currentHand.cards * cardHeight - 10 + math.sin(love.timer.getTime()*10) * 10, 0, 3, 3)
+
+    end
+
 end
 
 function Dealer:mousepressed(x, y, button)
@@ -114,8 +123,12 @@ function Dealer:playerState()
     game.hud.standButton.enabled = true
 
     --First hand is blackjack!
-    if #self.hands == 1 and self.hands[self.currentHand]:isBlackjack() then 
-        self:startDealerDraw()
+    if self.hands[self.currentHand]:isBlackjack() then 
+        self.currentHand = self.currentHand + 1
+        if #self.hands < self.currentHand then 
+            self.currentHand = 1
+            self:startDealerDraw()
+        end
     end
 end
 
@@ -203,6 +216,15 @@ end
 
 
 function Dealer:endRound()
+    if player.balance < player.minBet then 
+        game.state = "death"
+        return 
+    end
+    
+    if player.currentBet > player.balance then 
+        player.currentBet = player.balance
+    end
+    
     self.state = "betting"
     player:reshuffle()
     shop:restock()
@@ -212,6 +234,9 @@ function Dealer:endRound()
     end
     self.dealerHand:collect()
     game.hud:setMakeBets(true)
+    shop.restockFee = 100
+    shop.restockButton.text = "Restock $"..shop.restockFee
+
 end
 
 function Dealer:startDealerDraw()
@@ -268,12 +293,7 @@ function Dealer:split()
     newHand.betAmount = currentHand.betAmount
     player:addBalance(-currentHand.betAmount)
 
-    table.insert(self.hands, newHand)
-
-    
-    for i,v in pairs(self.hands) do
-        v:setTarget(spaceEvenly(#self.hands, #self.hands - (i-1), 1920/2, 200), v.targetY)
-    end
+    self:addHand(newHand)
 end
 
 function Dealer:startPayout()
@@ -282,4 +302,16 @@ function Dealer:startPayout()
     self.dealerHand.cards[2].flipped = false
     game.hud.hitButton.enabled = false
     game.hud.standButton.enabled = false
+end
+
+function Dealer:addHand(hand)
+    table.insert(self.hands, hand)
+
+    local spacing = 200
+    if #self.hands * 200 > 1920 then 
+        spacing = 1920/#self.hands - 10
+    end
+    for i,v in pairs(self.hands) do
+        v:setTarget(spaceEvenly(#self.hands, #self.hands - (i-1), 1920/2, spacing), v.targetY)
+    end
 end

@@ -36,6 +36,11 @@ function Hud:initialize()
             dealer:endRound()
             self.continueButton.enabled = false
         end):setAnchor(0.5, 0.5):setTextSize(40),
+
+         Button:new(0, 250, 500, 150, "New Game", function()
+            game:newGame()
+            self.newGameButton.enabled = false
+        end):setAnchor(0.5, 0.5):setTextSize(40),
     }
 
     self.hitButton = self.buttons[1]
@@ -44,6 +49,8 @@ function Hud:initialize()
     self.startRoundButton = self.buttons[4]
     self.deckViewerButton = self.buttons[5]
     self.continueButton = self.buttons[6]
+
+    self.newGameButton = self.buttons[7]
 
     self.deckViewerButton.enabled = true
 
@@ -69,6 +76,10 @@ function Hud:update(dt)
 
     deckViewer:update(dt)
     self.deckViewerButton.x = deckViewer.x - 50
+
+    if game.state == "death" then 
+        self.newGameButton.enabled = true
+    end
 end
 
 function Hud:draw()
@@ -76,11 +87,27 @@ function Hud:draw()
     love.graphics.setColor(1,1,1)
     love.graphics.print("Balance: $"..math.floor(player.displayBalance))
 
+
+    if game.state == "death" then 
+        love.graphics.setColor(0.8, 0.1, 0.1, 0.7)
+        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+        love.graphics.setColor(1,1,1,1)
+        game:setFont(48)
+        local text = "Gambler's loss!"
+        love.graphics.print(text, love.graphics.getWidth() / 2 - game.font:getWidth(text) / 2, 380)
+        game:setFont(30)
+        text = "Looks like you ran out of luck, buddy"
+        love.graphics.print(text, love.graphics.getWidth() / 2 - game.font:getWidth(text) / 2, 450)
+        game:setFont(30)
+        text = "Minimum Bet: $"..player.minBet.. "  Balance: $"..player.balance 
+        love.graphics.print(text, love.graphics.getWidth() / 2 - game.font:getWidth(text) / 2, 500)
+    end
+
+
     for i,v in pairs(self.floatingTexts) do
         v:draw()
     end
-    
-    
+
     for i, v in pairs(self.buttons) do
         v:draw()        
     end

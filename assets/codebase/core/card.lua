@@ -23,10 +23,18 @@ function Card:initialize(rank, suit)
 
     self.enchantments = {}
 
+    self.showTooltip = false
+
 end
 
 function Card:update(dt)
     self:drag(dt)
+
+    if self:mouseOver() then 
+        self.showtoolTip = true
+    else
+        self.showTooltip = false
+    end
 end
 
 function Card:draw()
@@ -44,7 +52,6 @@ end
 
 function Card:render()
     
-    love.graphics.setColor(1,1,1,1)
     if #self.enchantments > 0 and not self.flipped then 
         enchantmentShader:send("time", love.timer.getTime())
         enchantmentShader:send("tint_color", self.enchantments[1].color)
@@ -92,6 +99,15 @@ function Card:mousepressed(x, y, button)
     end
 end
 
+function Card:mouseOver()
+    local mouseX, mouseY = love.mouse.getPosition()
+
+    if pointInRect({mouseX, mouseY}, {self.x, self.y, self.width, self.height}) then 
+        return true
+    end    
+    return false
+end
+
 function Card:setPosition(x, y)
     self.x = x
     self.y = y
@@ -120,4 +136,18 @@ function Card:hasEnchantment(enchantmentClass)
         end
     end
     return false
+end
+
+function Card:getTooltip()
+    local content = {}
+    for i,v in pairs(self.enchantments) do
+        table.insert(content, v.tooltip)
+    end
+    return content
+end
+
+function Card:onDraw()
+    for i,v in pairs(self.enchantments) do
+        v:onDraw()
+    end
 end

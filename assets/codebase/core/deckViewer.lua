@@ -218,6 +218,7 @@ function ViewCard:mouseOver()
 
     if pointInRect({mouseX, mouseY}, {x, y, self.card.width * self.scale, self.card.height * self.scale}) then 
         self.targetY = self.defaultY - 30
+        tooltip:setContent(self:getTooltip()):setPosition(deckViewer.x + self.x - 15, deckViewer.x + self.x + cardWidth * self.scale + 15, deckViewer.y + self.y)
         return true
     end    
 end
@@ -229,4 +230,11 @@ function ViewCard:mousepressed(x, y, button)
     if deckViewer.spellCard ~= nil then 
         deckViewer.spellCard:onPostSpell(self.card)
     end
+end
+
+function ViewCard:getTooltip()
+    if self.card then 
+        return self.card:getTooltip()
+    end
+    return {}
 end

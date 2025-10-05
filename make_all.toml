@@ -1,0 +1,7 @@
+name = "Enchanted Blackjack"
+default_targets = ["win32", "win64", "macos"]
+build_directory = "bin"
+love_files = [
+"+*",
+"-*/.*",
+]

@@ -17,6 +17,7 @@ require("assets/codebase/core/floatingText")
 require("assets/codebase/core/deckViewer")
 require("assets/codebase/core/shop")
 require("assets/codebase/core/enchantment")
+require("assets/codebase/core/tooltip")
 
 
 --Helper

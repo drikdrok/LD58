@@ -42,7 +42,7 @@ function Button:draw()
 end
 
 function Button:mousepressed(x, y, button)
-    if not self.enabled then return end
+    if not self.enabled or game.hasClicked then return end
     if pointInRect({x,y}, {self.x, self.y, self.width, self.height}) then
         self.isDown = true
         game.hasClicked = true

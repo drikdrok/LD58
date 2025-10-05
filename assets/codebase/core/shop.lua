@@ -147,10 +147,12 @@ function ShopCard:initialize(card)
 end
 
 function ShopCard:update(dt)
+    if self.purchased then return end 
     self.scale = lerp(self.scale, self.targetScale, 6 * dt)
 
     if self:isMouseOver() then 
         self.targetScale = 1.3
+        tooltip:setContent(self:getTooltip()):setPosition(shop.x + self.x - 15, shop.x + self.x + self.width + 15, self.y)
     else
         self.targetScale = 1.2
     end
@@ -228,12 +230,23 @@ function ShopCard:addRandomEnchantment()
     local enchantments = {
         MultiplierEnchantment,
         WinPushEnchantment,
+        FreebieEnchantment,
     }
 
     local enchantmentClass = enchantments[love.math.random(1, #enchantments)]
 
     self.card:addEnchantment(enchantmentClass:new())
 
+end
+
+function ShopCard:getTooltip()
+    if self.card then 
+        return self.card:getTooltip()
+    end
+    if self.tooltip then 
+        return {self.tooltip}
+    end
+    return {}
 end
 
 
@@ -246,6 +259,7 @@ BurnSpellCard = class("BurnSpellCard", ShopCard)
 function BurnSpellCard:initialize()
     ShopCard.initialize(self)
     self.deckViewerText = "Select a Card to DESTROY!"
+    self.tooltip = TooltipContent:new("Burn Spell", {"DESTROY a Card From Your Collection"})
 end
 
 function BurnSpellCard:onPurchase()
@@ -267,11 +281,12 @@ end
 
 
 
---Burn Spell
+--Duplicate Spell
 DuplicateSpellCard = class("DuplicateSpellCard", ShopCard)
 function DuplicateSpellCard:initialize()
     ShopCard.initialize(self)
     self.deckViewerText = "Select a Card to Copy!"
+     self.tooltip = TooltipContent:new("DNA Spell", {"Duplicate a Card In Your Collection"})
 end
 
 function DuplicateSpellCard:onPurchase()

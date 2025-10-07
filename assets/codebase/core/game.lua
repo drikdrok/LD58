@@ -11,6 +11,8 @@ function Game:initialize()
 
     self.hasClicked = false
 
+    self.scale = love.graphics.getWidth() / 1920
+
     self:newGame()
 end
 
@@ -21,6 +23,8 @@ function Game:load()
 end
 
 function Game:update(dt)
+    self.scale = love.graphics.getWidth() / 1920
+    
     if not self.loaded then 
         self:load()
     end
@@ -34,7 +38,10 @@ function Game:update(dt)
 
 end
 
+local canvas = love.graphics.newCanvas(9999, 9999)
 function Game:draw()
+    love.graphics.setCanvas(canvas)
+    love.graphics.clear()
     dealer:draw()
 
     self.hud:draw()
@@ -43,15 +50,26 @@ function Game:draw()
 
     tooltip:draw()
 
-    if self.state == "death" then 
 
-
-
+    if dealer.state == "betting" then
+        game:setFont(20)
+        love.graphics.print("Press f11 to toggle fullscreen!", 0, 1000)
     end
+
+    love.graphics.setCanvas()
+
+    love.graphics.draw(canvas, 0, 0, 0, self.scale, self.scale)
+
+   
 end
 
 function Game:keypressed(key)
 
+end
+
+function Game:getMousePostion()
+    local x, y = love.mouse.getPosition()
+    return x / self.scale, y / self.scale
 end
 
 function Game:mousepressed(x, y, button)

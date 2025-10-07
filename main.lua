@@ -5,6 +5,8 @@ math.randomseed(os.time())
 
 love.graphics.setBackgroundColor(53 / 255, 101 / 255, 77 / 255)
 
+love.graphics.setDefaultFilter("nearest", "nearest")
+
 function love.load()
     game = Game:new()
 
@@ -25,15 +27,19 @@ function love.keypressed(key)
 
     if key == "f1" then debug = not debug end
 
+    if key == "f11" then 
+        love.window.setFullscreen(not love.window.getFullscreen(), "desktop")
+    end
+
     if debug and key == "m" then 
         player:addBalance(1000)
     end
 end
 
 function love.mousepressed(x, y, button, isTouch, presses)
-    game:mousepressed(x, y, button)
+    game:mousepressed(x / game.scale, y / game.scale, button)
 end 
 
 function love.mousereleased(x, y, button, isTouch, presses)
-    game:mousereleased(x, y, button)
+    game:mousereleased(x / game.scale, y / game.scale, button)
 end 

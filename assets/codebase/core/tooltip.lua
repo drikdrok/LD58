@@ -29,7 +29,7 @@ function Tooltip:draw()
     local y = math.max(0, self.y - height / 2)
 
 
-    if self.rightX + width > love.graphics.getWidth() then -- Draw left 
+    if self.rightX + width > 1920 then -- Draw left 
         x = self.leftX - width
     else    
     --Draw Right

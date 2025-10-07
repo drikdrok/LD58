@@ -57,8 +57,8 @@ function Hud:initialize()
 
     self.makeBets = true
 
-    local centerX = love.graphics.getWidth() / 2
-    local centerY = love.graphics.getHeight() / 2 - 200
+    local centerX = 1920 / 2
+    local centerY = 1080 / 2 - 200
     self.betAdjusters = {
         BetAdjuster:new(50, centerX, centerY),
         BetAdjuster:new(25, centerX + 85, centerY),
@@ -90,17 +90,17 @@ function Hud:draw()
 
     if game.state == "death" then 
         love.graphics.setColor(0.8, 0.1, 0.1, 0.7)
-        love.graphics.rectangle("fill", 0, 0, love.graphics.getWidth(), love.graphics.getHeight())
+        love.graphics.rectangle("fill", 0, 0, 1920, 1080)
         love.graphics.setColor(1,1,1,1)
         game:setFont(48)
         local text = "Gambler's loss!"
-        love.graphics.print(text, love.graphics.getWidth() / 2 - game.font:getWidth(text) / 2, 380)
+        love.graphics.print(text, 1920 / 2 - game.font:getWidth(text) / 2, 380)
         game:setFont(30)
         text = "Looks like you ran out of luck, buddy"
-        love.graphics.print(text, love.graphics.getWidth() / 2 - game.font:getWidth(text) / 2, 450)
+        love.graphics.print(text, 1920 / 2 - game.font:getWidth(text) / 2, 450)
         game:setFont(30)
         text = "Minimum Bet: $"..player.minBet.. "  Balance: $"..player.balance 
-        love.graphics.print(text, love.graphics.getWidth() / 2 - game.font:getWidth(text) / 2, 500)
+        love.graphics.print(text, 1920 / 2 - game.font:getWidth(text) / 2, 500)
     end
 
 
@@ -120,7 +120,7 @@ function Hud:draw()
         game:setFont(36)
         local text = "Make Bet: $"..player.currentBet
 
-        local x = love.graphics.getWidth() / 2 - game.font:getWidth(text) - 50
+        local x = 1920 / 2 - game.font:getWidth(text) - 50
         love.graphics.print(text, x, love.graphics.getHeight() / 2 - 200)
          
         game:setFont(20)

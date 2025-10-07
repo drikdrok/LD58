@@ -60,7 +60,7 @@ end
 
 -- Set anchor relative to screen width, height
 function Button:setAnchor(x, y)
-    local width, height = love.graphics.getDimensions()
+    local width, height = 1920, 1080
     self.x = self.x + width    * x - self.width / 2
     self.y = self.y + height   * y - self.height / 2
 

@@ -67,7 +67,7 @@ end
 
 
 function Card:drag(dt)
-    local x, y = love.mouse.getPosition()
+    local x, y = game:getMousePostion()
 
     if self.dragging then 
         self.targetX = x
@@ -100,7 +100,7 @@ function Card:mousepressed(x, y, button)
 end
 
 function Card:mouseOver()
-    local mouseX, mouseY = love.mouse.getPosition()
+    local mouseX, mouseY = game:getMousePostion()
 
     if pointInRect({mouseX, mouseY}, {self.x, self.y, self.width, self.height}) then 
         return true

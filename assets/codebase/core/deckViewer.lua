@@ -5,8 +5,8 @@ function DeckViewer:initialize()
     self.width = 700
     self.height = 400
 
-    self.x = love.graphics.getWidth()
-    self.y = love.graphics.getHeight() - self.height
+    self.x = 1920
+    self.y = 1080 - self.height
 
     self.targetX = self.x
 
@@ -70,7 +70,7 @@ end
 
 
 function DeckViewer:show()
-    self.targetX = love.graphics.getWidth() - self.width
+    self.targetX = 1920 - self.width
     self.active = true
     game.hud.deckViewerButton.text = "<"
 
@@ -78,7 +78,7 @@ function DeckViewer:show()
 end
 
 function DeckViewer:hide()
-    self.targetX = love.graphics.getWidth()
+    self.targetX = 1920
     self.active = false
     game.hud.deckViewerButton.text = ">"
 end
@@ -211,7 +211,7 @@ end
 
 function ViewCard:mouseOver()
     if not self.card then return end 
-    local mouseX, mouseY = love.mouse.getPosition()
+    local mouseX, mouseY = game:getMousePostion()
 
     local x = deckViewer.x + self.x
     local y = deckViewer.y + self.defaultY

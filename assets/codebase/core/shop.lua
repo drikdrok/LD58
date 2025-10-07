@@ -5,7 +5,7 @@ function Shop:initialize()
     self.width  = 700
     self.height = 800
     
-    self.x = love.graphics.getWidth() - self.width
+    self.x = 1920 - self.width
     self.y = 0
 
     self.cards = {}
@@ -199,7 +199,7 @@ function ShopCard:mousepressed(x, y, button)
 end
 
 function ShopCard:isMouseOver() 
-  local mouseX, mouseY = love.mouse.getPosition()
+  local mouseX, mouseY = game:getMousePostion()
 
     local x = shop.x + self.x
     local y = shop.y + self.y
